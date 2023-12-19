@@ -1,0 +1,79 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    addressable (2.8.6)
+      public_suffix (>= 2.0.2, < 6.0)
+    attr_extras (7.1.0)
+    debug (1.9.0)
+      irb (~> 1.10)
+      reline (>= 0.3.8)
+    diff-lcs (1.5.0)
+    fileutils (1.7.2)
+    fuubar (2.5.1)
+      rspec-core (~> 3.0)
+      ruby-progressbar (~> 1.4)
+    git (1.18.0)
+      addressable (~> 2.8)
+      rchardet (~> 1.8)
+    io-console (0.7.1)
+    irb (1.10.1)
+      rdoc
+      reline (>= 0.3.8)
+    msgpack (1.7.2)
+    multi_json (1.15.0)
+    neovim (0.9.1)
+      msgpack (~> 1.1)
+      multi_json (~> 1.0)
+    optimist (3.1.0)
+    patience_diff (1.2.0)
+      optimist (~> 3.0)
+    psych (5.1.1.1)
+      stringio
+    public_suffix (5.0.4)
+    quickfix_formatter (0.1.0)
+      rspec (>= 3.12.0)
+    rchardet (1.8.0)
+    rdoc (6.6.2)
+      psych (>= 4.0.0)
+    reline (0.4.1)
+      io-console (~> 0.5)
+    rspec (3.12.0)
+      rspec-core (~> 3.12.0)
+      rspec-expectations (~> 3.12.0)
+      rspec-mocks (~> 3.12.0)
+    rspec-core (3.12.2)
+      rspec-support (~> 3.12.0)
+    rspec-expectations (3.12.3)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.12.0)
+    rspec-mocks (3.12.6)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.12.0)
+    rspec-support (3.12.1)
+    ruby-progressbar (1.13.0)
+    stringio (3.1.0)
+    super_diff (0.10.0)
+      attr_extras (>= 6.2.4)
+      diff-lcs
+      patience_diff
+    tmpdir (0.2.0)
+      fileutils
+
+PLATFORMS
+  arm64-darwin-22
+
+DEPENDENCIES
+  debug
+  fuubar
+  git
+  neovim
+  quickfix_formatter
+  rspec
+  super_diff
+  tmpdir
+
+RUBY VERSION
+   ruby 3.2.2p53
+
+BUNDLED WITH
+   2.4.21

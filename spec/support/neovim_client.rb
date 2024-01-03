@@ -6,44 +6,41 @@ class NeovimClient
   end
 
   def setup
-    @instance = Neovim.attach_child(
-      [
-        { "NEOGIT_LOG_FILE" => "true", "NEOGIT_LOG_LEVEL" => "debug" },
-        "nvim",
-        "--embed",
-        "--clean",
-        "--headless",
-      ]
-    )
+    @instance = attach_child
 
-    @instance.exec_lua("vim.opt.runtimepath:append('#{PROJECT_DIR}')", [])
-
-    dependencies = Dir[File.join(PROJECT_DIR, "tmp", "*")].select { Dir.exist? _1 }
-    dependencies.each do |dep|
-      @instance.exec_lua("vim.opt.runtimepath:append('#{dep}')", [])
+    # Sets up the runtimepath
+    lua "vim.opt.runtimepath:append('#{PROJECT_DIR}')"
+    runtime_dependencies.each do |dep|
+      lua "vim.opt.runtimepath:append('#{dep}')"
     end
 
-    @instance.exec_lua("require('neogit').setup()", [])
-    @instance.exec_lua("require('neogit').open()", [])
+    lua <<~LUA
+      require('neogit').setup()
+      require('neogit').open()
+    LUA
+
+    sleep(0.025) # Seems to be about right
   end
 
   def print_screen
-    return if @instance.nil?
-
     puts get_lines
   end
 
-  def get_lines
-    return if @instance.nil?
+  def lua(code)
+    @instance.exec_lua(code, [])
+  end
 
+  def get_lines
     @instance.current.buffer.get_lines(0, -1, true).join("\n")
   end
 
-  # Low-level user input
-  def input(keys)
-    @instance.exec_lua(<<~LUA, [])
+  # Overload vim.fn.input() to prevent blocking.
+  def input(*args)
+    lua <<~LUA
+      local inputs = { #{args.map(&:inspect).join(",")} }
+
       vim.fn.input = function()
-        return "#{keys}"
+        return table.remove(inputs, 1)
       end
     LUA
   end
@@ -57,5 +54,13 @@ class NeovimClient
     )
 
     @instance.feedkeys("", "x", true)
+  end
+
+  def attach_child
+    Neovim.attach_child(["nvim", "--embed", "--clean", "--headless"])
+  end
+
+  def runtime_dependencies
+    Dir[File.join(PROJECT_DIR, "tmp", "*")].select { Dir.exist? _1 }
   end
 end

@@ -27,51 +27,13 @@ RSpec.configure do |config|
   config.profile_examples = 10
   config.order = :random
 
+  config.include Helpers
+
   config.around(:each) do |example|
     Dir.mktmpdir do |tmp|
       Dir.chdir(tmp) do
         example.run
       end
     end
-  end
-
-  config.around(:each) do |example|
-    # if example.metadata[:git]
-    #   system("touch testfile")
-    #
-    #   @repo = Git.init
-    #   @repo.config("user.email", "test@example.com")
-    #   @repo.config("user.name", "tester")
-    #   @repo.add("testfile")
-    #   @repo.commit("Initial commit")
-    # end
-
-    # if example.metadata[:neovim]
-    #   $neovim = Neovim.attach_child(
-    #     [
-    #       { "NEOGIT_LOG_FILE" => "true", "NEOGIT_LOG_LEVEL" => "debug" },
-    #       "nvim",
-    #       "--embed",
-    #       "--clean",
-    #       "--headless",
-    #       # "-c set rtp^=#{PROJECT_DIR},#{dependencies}",
-    #       # "-c lua require('neogit').setup({})"
-    #     ]
-    #   )
-    #
-    #   $neovim.exec_lua("vim.opt.runtimepath:append('#{PROJECT_DIR}')", [])
-    #
-    #   dependencies = Dir[File.join(PROJECT_DIR, "tmp", "*")].select { Dir.exist? _1 }
-    #   dependencies.each do |dep|
-    #     $neovim.exec_lua("vim.opt.runtimepath:append('#{dep}')", [])
-    #   end
-    #
-    #   $neovim.exec_lua("require('neogit').setup()", [])
-    #   $neovim.exec_lua("require('neogit').open()", [])
-    #   # $neovim.cmd({cmd: "Neogit"}, {output: true })
-    #   # $neovim.cmd("lua require('neogit').open()")
-    # end
-    #
-    example.run
   end
 end

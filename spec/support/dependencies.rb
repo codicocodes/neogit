@@ -5,7 +5,10 @@ def dir_name(name)
 end
 
 def ensure_installed(name)
-  dir = File.join(PROJECT_DIR, "tmp", dir_name(name))
+  tmp = File.join(PROJECT_DIR, "tmp")
+  Dir.mkdir(tmp) if !Dir.exist?(tmp)
+
+  dir = File.join(tmp, dir_name(name))
 
   return if Dir.exist?(dir) && !Dir.empty?(dir)
 

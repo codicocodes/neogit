@@ -2,8 +2,39 @@
 
 require "spec_helper"
 
-RSpec.describe "Branch Popup", :git, :neovim do
-  include NeovimHelper
+# def wait_for_expect
+#   last_error = nil
+#   success = false
+#
+#   5.times do
+#     begin
+#       yield
+#       success = true
+#       break
+#     rescue RSpec::Expectations::ExpectationNotMetError => e
+#       last_error = e
+#       sleep 0.5
+#     end
+#   end
+#
+#   raise last_error if !success && last_error
+# end
+
+RSpec.describe "Branch Popup", :neovim do
+  let(:repo) { Git.init }
+  let(:nvim) { NeovimClient.new }
+
+  before do
+    system("touch testfile")
+
+    repo.config("user.email", "test@example.com")
+    repo.config("user.name", "tester")
+    repo.add("testfile")
+    repo.commit("Initial commit")
+
+    nvim.setup
+    sleep(1)
+  end
 
   describe "Checkout branch/revision" do
     it "can checkout a local branch"
@@ -11,13 +42,11 @@ RSpec.describe "Branch Popup", :git, :neovim do
 
   describe "Create branch" do
     it "can create and checkout a branch" do
-      sleep 1
-      nvim_feedkeys("bc")
-      sleep 2
-      nvim_feedkeys("new branch<cr>")
-      sleep 1
-      debugger(pre: "info")
-      expect(@repo.current_branch).to eq "new-branch"
+      nvim.input("new branch")
+      nvim.feedkeys("bc")
+      nvim.feedkeys("master<cr>")
+
+      expect(repo.current_branch).to eq "new-branch"
     end
   end
 end

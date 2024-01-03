@@ -8,12 +8,18 @@ class NeovimClient
   def setup
     @instance = attach_child
 
+    lua "vim.opt.runtimepath:append('#{PROJECT_DIR}')"
+
     if ENV["CI"].nil?
       # Sets up the runtimepath
-      lua "vim.opt.runtimepath:append('#{PROJECT_DIR}')"
       runtime_dependencies.each do |dep|
         lua "vim.opt.runtimepath:append('#{dep}')"
       end
+    else
+      lua <<~LUA
+        vim.cmd([[runtime! plugin/plenary.vim]])
+        vim.cmd([[runtime! plugin/neogit.lua]])
+      LUA
     end
 
     lua <<~LUA

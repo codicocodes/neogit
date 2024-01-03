@@ -29,9 +29,19 @@ jobs:
           tar -zxf nvim-linux64.tar.gz
           sudo ln -s $(pwd)/nvim-linux64/bin/nvim /usr/local/bin
 
-      - name: Test
-        continue-on-error: false
+      - uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+
+      - name: Luassert Test
+        continue-on-error: true
         env:
           ci: "1"
         run: |
           make test
+
+      - name: E2E Test
+        env:
+          ci: "1"
+        run: |
+          bundle exec rspec
